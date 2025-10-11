@@ -1,0 +1,171 @@
+#include "lexer.h"
+
+
+
+Token_t* tokenize(char* input) {
+    Token_t* result = malloc((strlen(input)+1) * sizeof(Token_t));
+    size_t token_pos = 0;
+    size_t index = 0;
+    for(; input[index] != 0; index++)
+    {
+        if(isdigit((unsigned char)input[index]))
+        {
+            size_t index2=index;
+            for(; isdigit((unsigned char)input[index2]); index2++);
+            size_t len = index2 - index;
+            char* matched = malloc(len+1);
+            memcpy(matched, input + index, len);
+            matched[len] = 0;
+            result[token_pos].type = TOKEN_NUMBER;
+            result[token_pos].index = index;
+            result[token_pos++].value = matched;
+            index = index2-1;
+        }
+        else if(isalpha((unsigned char)input[index]))
+        {
+            size_t index2=index;
+            for(; isalnum((unsigned char)input[index2]); index2++);
+            size_t len = index2 - index;
+            char* matched = malloc(len+1);
+            memcpy(matched, input + index, len);
+            matched[len] = 0;
+            if(iskeyword(matched))
+            {
+                result[token_pos].type = TOKEN_KEYWORD;
+                result[token_pos].index = index;
+                result[token_pos++].value = matched;
+            }
+            else
+            {
+                result[token_pos].type = TOKEN_IDENTIFIER;
+                result[token_pos].index = index;
+                result[token_pos++].value = matched;
+            }
+            index = index2-1;
+        }
+        else if(input[index++] == '"')
+        {
+            size_t index2=index;
+            for(; input[index2] != '"'; index2++);
+            size_t len = index2 - index;
+            char* matched = malloc(len+1);
+            memcpy(matched, input + index, len);
+            matched[len] = 0;
+            result[token_pos].type = TOKEN_STRING;
+            result[token_pos].index = index;
+            result[token_pos++].value = matched;
+            index = index2+1;
+        }
+        else if(input[index] == '=')
+        {
+            if(input[index+1] == '=')
+            {
+                result[token_pos].type = TOKEN_EQ;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup("==");
+                index+=1;
+            }
+            else if(input[index+1] == '>')
+            {
+                result[token_pos].type = TOKEN_GTE;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup("=>");
+                index+=1;
+            }
+            else if(input[index+1] == '<')
+            {
+                result[token_pos].type = TOKEN_LTE;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup("=<");
+                index+=1;
+            }
+            else
+            {
+                result[token_pos].type = TOKEN_ASSIGN;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup("=");
+            }
+        }
+        else if(input[index] == '<')
+        {
+                result[token_pos].type = TOKEN_LT;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup("<");
+        }
+        else if(input[index] == '>')
+        {
+                result[token_pos].type = TOKEN_GT;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup(">");
+        }
+        else if(input[index] == ';')
+        {
+                result[token_pos].type = TOKEN_SEMICOLON;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup(";");
+        }
+
+        else if(input[index] == '+')
+        {
+            result[token_pos].type = TOKEN_PLUS;
+            result[token_pos].index = index;
+            result[token_pos++].value = strdup("+");
+        }
+        else if(input[index] == '-')
+        {
+            result[token_pos].type = TOKEN_MINUS;
+            result[token_pos].index = index;
+            result[token_pos++].value = strdup("-");
+        }
+        else if(input[index] == '*')
+        {
+            result[token_pos].type = TOKEN_STAR;
+            result[token_pos].index = index;
+            result[token_pos++].value = strdup("*");
+        }
+        else if(input[index] == '/')
+        {
+            result[token_pos].type = TOKEN_SLASH;
+            result[token_pos].index = index;
+            result[token_pos++].value = strdup("/");
+        }
+
+
+        else if(input[index] == '!')
+        {
+            if(input[index+1] == '=')
+            {
+                result[token_pos].type = TOKEN_NEQ;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup("!=");
+                index+=1;
+            }
+        }
+
+        
+        else if(isspace(input[index])) continue;
+
+        else if(input[index] == ',')
+        {
+            result[token_pos].type = TOKEN_COMMA;
+            result[token_pos].index = index;
+            result[token_pos++].value = strdup(",");
+        }
+        else 
+        {
+                result[token_pos].type = TOKEN_UNKNOW;
+                result[token_pos].index = index;
+                result[token_pos].value = malloc(2);
+                result[token_pos].value[1] = 0;
+                result[token_pos++].value[0] = input[index];
+        }
+    }
+    result[token_pos].type = TOKEN_EOF;
+    result[token_pos].value = malloc(1);
+    result[token_pos].value[0] = 0;
+    result[token_pos].index = index;
+    
+    
+
+    return result;
+}
