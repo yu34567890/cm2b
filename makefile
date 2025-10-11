@@ -2,7 +2,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -O2
 SRCS := $(wildcard *.c)
 OBJS := $(patsubst %.c, build/%.o, $(SRCS))
-TARGET = build/program
+TARGET = build/cm2b
 
 all: $(TARGET)
 
