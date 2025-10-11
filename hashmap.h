@@ -1,4 +1,5 @@
-
+#ifndef HASHMAP_H
+#define HASHMAP_H
 #include "stdlib.h"
 #include <limits.h>
 #include <string.h>
@@ -23,3 +24,4 @@ bucket_t init_hashmap(unsigned int bucket_size);
 unsigned int hash(char *str);
 void push_int(bucket_t *bucket, char* key, unsigned int value);
 unsigned int* get_key(bucket_t* bucket,char* key);
+#endif // HASHMAP_H

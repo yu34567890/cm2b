@@ -9,8 +9,9 @@
 
 #include "token.h"
 
-size_t get_row(const char* input, size_t index);
-size_t get_column(const char* input, size_t index);
+
+size_t get_row(size_t index);
+size_t get_column( size_t index);
 unsigned int hextouint(const char* hex);
 bool iskeyword(char* input);
 char *token_to_string(Token_t token);

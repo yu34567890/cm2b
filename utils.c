@@ -2,21 +2,21 @@
 
 
 
-size_t get_row(const char* input, size_t index)
+size_t get_row(size_t index)
 {
     size_t row = 1;
-    for (size_t i = 0; i < index && input[i] != '\0'; i++) {
-        if (input[i] == '\n') {
+    for (size_t i = 0; i < index && code[i] != '\0'; i++) {
+        if (code[i] == '\n') {
             row++;
         }
     }
     return row;
 }
 
-size_t get_column(const char* input, size_t index)
+size_t get_column(size_t index)
 {
     size_t column = 1;
-    for (size_t i = index; i > 0 && input[i - 1] != '\n'; i--) {
+    for (size_t i = index; i > 0 && code[i - 1] != '\n'; i--) {
         column++;
     }
     return column;
