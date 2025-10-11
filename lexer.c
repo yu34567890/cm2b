@@ -54,7 +54,7 @@ Token_t* tokenize(char* input) {
             result[token_pos].type = TOKEN_STRING;
             result[token_pos].index = index;
             result[token_pos++].value = matched;
-            index = index2+1;
+            index = index2;
         }
         else if(input[index] == '=')
         {
