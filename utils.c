@@ -1,5 +1,5 @@
 #include "utils.h"
-
+#include "hashmap.h" // for hash() function
 
 
 size_t get_row(size_t index)
@@ -45,27 +45,70 @@ char *token_to_string(Token_t token) {
         default: return "UNKNOWN";
     }
 }
-
-
-bool iskeyword(char* input) { // thank you chatgpt for this garbage 
-    const char *keywords[] = {
+/*
+char *keywords[] = {
         "if",
         "then",
-        "endif",
+        "else",
         "set",
         "init",
         "asm",
         "label",
         "goto",
-        "gosub"
+        "gosub",
+        "scope"
+};
+if: 565107
+then: 3485174323
+else: 2947459201
+set: 3330387112
+init: 3465943172
+asm: 2809269541
+label: 1196254976
+goto: 1117160149
+gosub: 2750591888
+scope: 2573301126
+void gen_keyword_hash() { // to generate switch case fast for the iskeyword
+    char *keywords[] = {
+        "if",
+        "then",
+        "else",
+        "set",
+        "init",
+        "asm",
+        "label",
+        "goto",
+        "gosub",
+        "scope"
     };
 
     size_t count = sizeof(keywords) / sizeof(keywords[0]);
 
     for (size_t i = 0; i < count; i++) {
-        if (strcmp(input, keywords[i]) == 0)
-            return true;
+        printf("case %u:\n",hash(keywords[i]));
     }
 
-    return false;
+}
+*/
+
+bool iskeyword(char* input) { // todo optimize it with hash strings
+
+
+    switch(hash(input)) // todo fix collisions
+    {
+        case 565107:
+        case 3485174323:
+        case 2947459201:
+        case 3330387112:
+        case 3465943172:
+        case 2809269541:
+        case 1196254976:
+        case 1117160149:
+        case 2750591888:
+        case 2573301126:
+            return true;
+        default:
+            return false;
+
+    }
 }

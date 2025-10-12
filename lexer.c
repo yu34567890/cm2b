@@ -3,7 +3,7 @@
 
 
 Token_t* tokenize(char* input) {
-    Token_t* result = malloc((strlen(input)+1) * sizeof(Token_t));
+    Token_t* result = malloc((strlen(input)+1) * sizeof(Token_t)); // number of tokens must be smaller than the ammount of charachters 
     size_t token_pos = 0;
     size_t index = 0;
     for(; input[index] != 0; index++)
@@ -12,10 +12,7 @@ Token_t* tokenize(char* input) {
         if(isdigit((unsigned char)input[index]))
         {
             size_t index2=index;
-            for(; isdigit((unsigned char)input[index2]); index2++)
-            {
-               
-            }
+            for(; isdigit((unsigned char)input[index2]); index2++);
             size_t len = index2 - index;
             char* matched = malloc(len+1);
             memcpy(matched, input + index, len);
@@ -29,10 +26,7 @@ Token_t* tokenize(char* input) {
         else if(isalpha((unsigned char)input[index]))
         {
             size_t index2=index;
-            for(; isalnum((unsigned char)input[index2]); index2++)
-            {
-                
-            }
+            for(; isalnum((unsigned char)input[index2]); index2++);
             size_t len = index2 - index;
             char* matched = malloc(len+1);
             memcpy(matched, input + index, len);
@@ -52,11 +46,20 @@ Token_t* tokenize(char* input) {
             index = index2-1;
             continue;
         }
-        else if(input[index] == '"')
+        else if(input[index] == '"') 
         {
             index++;
             size_t index2=index;
-            for(; input[index2] != '"'; index2++);
+            for(; input[index2] != '"'; index2++)
+            {
+                if(input[index2] == 0)
+                {
+                    printf("ERROR: unterminated string at row %zu column %zu\n", get_row(index2),get_column(index2));
+                    fflush(stdout);
+                    exit(1);
+
+                }
+            }
             size_t len = index2 - index;
             char* matched = malloc(len+1);
             memcpy(matched, input + index, len);
@@ -182,7 +185,15 @@ Token_t* tokenize(char* input) {
     result[token_pos].value[0] = 0;
     result[token_pos].index = index;
     
-    
+    Token_t* tmp = realloc(result,(token_pos+1)*sizeof(struct Token_t));
+    if(tmp!=NULL)
+    {
+        return tmp;
+    }
+    else
+    {
+        perror("unable to realloc memory for tokens using old");
+    }
 
-    return result;
+    return result; 
 }

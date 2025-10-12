@@ -4,6 +4,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <stddef.h>
+#include <errno.h>
+
 
 #include "token.h"
 #include "utils.h"

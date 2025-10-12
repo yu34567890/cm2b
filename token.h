@@ -25,7 +25,7 @@ typedef enum
     TOKEN_UNKNOW
 } Tokentype;
 
-typedef struct 
+typedef struct Token_t
 {
     Tokentype type;
     char* value;   

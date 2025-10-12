@@ -40,6 +40,7 @@ int main(int argc, char **argv)
     fclose(fptr);
 
     Token_t* tokens = tokenize(code);
+
     for (size_t index = 0; tokens[index].type; index++)
     {
         printf("row %zu column %zu token %s value %s\n",
