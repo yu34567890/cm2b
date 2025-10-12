@@ -8,10 +8,14 @@ Token_t* tokenize(char* input) {
     size_t index = 0;
     for(; input[index] != 0; index++)
     {
+        
         if(isdigit((unsigned char)input[index]))
         {
             size_t index2=index;
-            for(; isdigit((unsigned char)input[index2]); index2++);
+            for(; isdigit((unsigned char)input[index2]); index2++)
+            {
+               
+            }
             size_t len = index2 - index;
             char* matched = malloc(len+1);
             memcpy(matched, input + index, len);
@@ -20,11 +24,15 @@ Token_t* tokenize(char* input) {
             result[token_pos].index = index;
             result[token_pos++].value = matched;
             index = index2-1;
+            continue;
         }
         else if(isalpha((unsigned char)input[index]))
         {
             size_t index2=index;
-            for(; isalnum((unsigned char)input[index2]); index2++);
+            for(; isalnum((unsigned char)input[index2]); index2++)
+            {
+                
+            }
             size_t len = index2 - index;
             char* matched = malloc(len+1);
             memcpy(matched, input + index, len);
@@ -42,9 +50,11 @@ Token_t* tokenize(char* input) {
                 result[token_pos++].value = matched;
             }
             index = index2-1;
+            continue;
         }
-        else if(input[index++] == '"')
+        else if(input[index] == '"')
         {
+            index++;
             size_t index2=index;
             for(; input[index2] != '"'; index2++);
             size_t len = index2 - index;
@@ -143,7 +153,7 @@ Token_t* tokenize(char* input) {
         }
 
         
-        else if(isspace(input[index])) continue;
+        else if(isspace(input[index]));
 
         else if(input[index] == ',')
         {
@@ -151,8 +161,15 @@ Token_t* tokenize(char* input) {
             result[token_pos].index = index;
             result[token_pos++].value = strdup(",");
         }
+        else if(input[index] == '.')
+        {
+            result[token_pos].type = TOKEN_DOT;
+            result[token_pos].index = index;
+            result[token_pos++].value = strdup(".");
+        }
         else 
         {
+               
                 result[token_pos].type = TOKEN_UNKNOW;
                 result[token_pos].index = index;
                 result[token_pos].value = malloc(2);

@@ -15,6 +15,7 @@ typedef enum
     TOKEN_ASSIGN,
     TOKEN_SEMICOLON,
     TOKEN_COMMA,
+    TOKEN_DOT,
     TOKEN_EQ,
     TOKEN_NEQ,
     TOKEN_LT,

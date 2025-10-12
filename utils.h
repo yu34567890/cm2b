@@ -8,7 +8,7 @@
 #include <math.h>
 
 #include "token.h"
-
+#include "globals.h"
 
 size_t get_row(size_t index);
 size_t get_column( size_t index);
