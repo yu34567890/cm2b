@@ -1,6 +1,4 @@
 #include "utils.h"
-#include "hashmap.h" // for hash() function
-
 
 size_t get_row(size_t index)
 {
@@ -121,6 +119,7 @@ const char* nodetype_to_string(Nodetype type) {
         case IF: return "IF";
         case ELSE: return "ELSE";
         case SCOPE_ACCES: return "SCOPE_ACCES";
+        case ASM: return "ASM";
         default: return "UNKNOWN";
     }
 }

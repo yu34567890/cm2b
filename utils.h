@@ -7,9 +7,12 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "parser.h"
 #include "token.h"
 #include "globals.h"
-#include "parser.h"
+#include "hashmap.h" // for hash() function
+
+
 
 size_t get_row(size_t index);
 size_t get_column( size_t index);

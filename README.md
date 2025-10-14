@@ -8,7 +8,7 @@ cm2b is a basic knockoff for CM2 CPUs. It is simple and minimalistic.
 
 ## TODO
 - [ ] Finish parser
-- [ ] Design an IR
+- [x] Design an [IR](https://docs.google.com/spreadsheets/d/13bLfUIbausaWUBpG9-wlf7qLv_2vzgzIvoaG8cppK4g)
 - [ ] Make IR generation
 - [x] Finish syntax design
 - [ ] Make a primitive scope  

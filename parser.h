@@ -6,7 +6,6 @@
 #include <stdio.h>
 #include "token.h"
 #include "hashmap.h"
-#include "utils.h"
 
 
 typedef enum 
@@ -24,6 +23,8 @@ typedef enum
     IF,
     ELSE,     // if <else statement
     SCOPE_ACCES, //scope accesing eg math.varname;
+    ASM // asm code eg asm "MOV R1,R2";
+
 } Nodetype;
 
 typedef struct Node_t 

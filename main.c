@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     fclose(fptr);
 
     Token_t* tokens = tokenize(code);
-
+    /*
     for (size_t index = 0; tokens[index].type; index++)
     {
         printf("row %zu column %zu token %s value %s\n",
@@ -53,7 +53,7 @@ int main(int argc, char **argv)
                get_column(tokens[index].index),
                token_to_string(tokens[index]),
                tokens[index].value);
-    }
+    }*/
     Node_t* tree = parse(tokens);
     print_tree(tree,2);
     printf("babalar\n");
