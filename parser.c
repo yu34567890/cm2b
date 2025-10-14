@@ -1,7 +1,17 @@
 #include "parser.h"
 
+char* current_scope;
+bucket_t variables; 
+Node_t ROOT_NODE;
+/*
+example usage
+    bucket_t testhashmap = init_hashmap(2048);
+    push_int(&testhashmap,"testkey",2096);
+    printf("%u",*(get_key(&testhashmap,"testkey")));
+*/
 
 /*
+node type so i dont keep checking parser.h file
 typedef struct Node_t 
 {
     Nodetype nodetype;
@@ -12,25 +22,119 @@ typedef struct Node_t
 } Node_t;
 */
 
+void print_error(const char *fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+
+    printf("\033[1;31m");       // start red color
+    vprintf(fmt, args);         // formatted print
+    printf("\033[0m\n");        // reset color + newline
+
+    va_end(args);
+}
 
 
-/* todo finish this shit 
-Node_t parse(Token_t* tokens)
+
+void insert_node(Node_t *target_node,Node_t *node)
 {
-    Node_t ROOT_NODE = {PROGRAM,NULL,NULL,0}; 
+    if(target_node->child_count == 0)
+    {
+        target_node->child_count++;
+        target_node->child = malloc(1*sizeof(Node_t*));
+        target_node->child[0] = node;
+        return;       
+    }
+    target_node->child_count++;
+    target_node->child = realloc(target_node->child,target_node->child_count*sizeof(Node_t*));
+    target_node->child[target_node->child_count-1] = node;
+}
+
+
+
+
+Node_t* parse_line(Token_t* tokens) // todo optimize it with switch and use hash like in utils.c iskeyword func
+{
+    Node_t* result;
+    if(tokens[0].type==TOKEN_KEYWORD)
+    {
+        if(strcmp(tokens[0].value,"label") == 0 ) 
+        {
+            
+            if(tokens[1].type == TOKEN_EOF)
+            {
+                print_error("ERROR: unexpected eof at row %zu column %zu did you forget semicollon ?",get_row(tokens[1].index),get_column(tokens[1].index));
+                exit(1); 
+            }
+            if(tokens[1].type != TOKEN_IDENTIFIER)
+            {
+                print_error("ERROR: label expected identifier at row %zu column %zu got %s instead ?",get_row(tokens[1].index),get_column(tokens[1].index),tokens[1].type);
+                exit(1); 
+            }
+            result = malloc(sizeof(Node_t));
+            result->nodetype = LABEL;
+            result->data = strdup(tokens[1].value);
+            result->child = NULL;
+            result->child_count = 0;
+
+            return result;
+        }
+        if(strcmp(tokens[0].value,"scope") == 0)
+        {
+            if(tokens[1].type == TOKEN_EOF)
+            {
+                print_error("ERROR: unexpected eof at row %zu column %zu did you forget semicollon ?",get_row(tokens[1].index),get_column(tokens[1].index));
+                exit(1); 
+            }
+            if(tokens[1].type != TOKEN_IDENTIFIER)
+            {
+                print_error("ERROR: scope expected identifier at row %zu column %zu got %s instead ?",get_row(tokens[1].index),get_column(tokens[1].index),tokens[1].type);
+                exit(1); 
+            }
+            result = malloc(sizeof(Node_t));
+            result->nodetype = SCOPE;
+            result->data = strdup(tokens[1].value);
+            result->child = NULL;
+            result->child_count = 0;
+            return result;
+        }
+
+    }
+}
+
+
+Node_t* parse(Token_t* tokens)
+{
+    variables = init_hashmap(2048);
+    Node_t* ROOT_NODE = malloc(sizeof(Node_t));
+    ROOT_NODE->nodetype = PROGRAM;
+    ROOT_NODE->child_count = 0;
+    ROOT_NODE->child = NULL;
+    ROOT_NODE->data = NULL;
     Token_t* args;
     size_t i2=0;
-    for(size_t i=0; tokens[i].type != TOKEN_EOF; i++)
+    size_t i=0;
+    for(; tokens[i].type != TOKEN_EOF; i++)
     {
-        Token_t current = tokens[i].type;
+        Token_t current = tokens[i];
         switch(current.type)
         {
-            case KEYWORD: 
-                for(; tokens[i2].type != TOKEN_EOF && TOKEN_SEMICOLON; i2++);
-                
+            case TOKEN_KEYWORD: 
+                for(i2=i;tokens[i2].type != TOKEN_SEMICOLON; i2++)
+                {
+                     if(tokens[i2].type == TOKEN_EOF)
+                     {
+                        print_error("ERROR: unexpected eof at row %zu column %zu did you forget semicollon ?",get_row(tokens[i].index),get_column(tokens[i].index));
+                        exit(1);
+                     }
+                }
+                size_t len = i2 - i;
+                args = malloc((len+1)*sizeof(struct Token_t));
+                args[len] = (Token_t){TOKEN_EOF,NULL,0}; 
+                memcpy(args, tokens+i, len*sizeof(struct Token_t));
+                insert_node(ROOT_NODE,parse_line(args));
+                i=i2;
                 break;
         }
     }
-
-
-}*/
+    return ROOT_NODE;
+}

@@ -2,7 +2,7 @@
 
 
 
-Token_t* tokenize(char* input) {
+Token_t* tokenize(char* input) { // todo add comments eg //
     Token_t* result = malloc((strlen(input)+1) * sizeof(Token_t)); // number of tokens must be smaller than the ammount of charachters 
     size_t token_pos = 0;
     size_t index = 0;
@@ -54,7 +54,7 @@ Token_t* tokenize(char* input) {
             {
                 if(input[index2] == 0)
                 {
-                    printf("ERROR: unterminated string at row %zu column %zu\n", get_row(index2),get_column(index2));
+                    printf("LEXER ERROR: unterminated string at row %zu column %zu\n", get_row(index),get_column(index));
                     fflush(stdout);
                     exit(1);
 

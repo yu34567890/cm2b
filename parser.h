@@ -2,8 +2,12 @@
 #define PARSER_H
 
 #include <stdlib.h> 
+#include <stdarg.h>
+#include <stdio.h>
 #include "token.h"
 #include "hashmap.h"
+#include "utils.h"
+
 
 typedef enum 
 {
@@ -31,6 +35,7 @@ typedef struct Node_t
     unsigned int child_count;
 } Node_t;
 
-Node_t parse(Token_t* tokens);
+
+Node_t* parse(Token_t* tokens);
 
 #endif //PARSER_H

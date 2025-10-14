@@ -46,28 +46,7 @@ char *token_to_string(Token_t token) {
     }
 }
 /*
-char *keywords[] = {
-        "if",
-        "then",
-        "else",
-        "set",
-        "init",
-        "asm",
-        "label",
-        "goto",
-        "gosub",
-        "scope"
-};
-if: 565107
-then: 3485174323
-else: 2947459201
-set: 3330387112
-init: 3465943172
-asm: 2809269541
-label: 1196254976
-goto: 1117160149
-gosub: 2750591888
-scope: 2573301126
+
 void gen_keyword_hash() { // to generate switch case fast for the iskeyword
     char *keywords[] = {
         "if",
@@ -85,7 +64,7 @@ void gen_keyword_hash() { // to generate switch case fast for the iskeyword
     size_t count = sizeof(keywords) / sizeof(keywords[0]);
 
     for (size_t i = 0; i < count; i++) {
-        printf("case %u:\n",hash(keywords[i]));
+        printf("case %u:\n      if(strcmp(\"%s\",input) == 0) return true;\n        break;\n",hash(keywords[i]),keywords[i]);
     }
 
 }
@@ -96,19 +75,36 @@ bool iskeyword(char* input) { // todo optimize it with hash strings
 
     switch(hash(input)) // todo fix collisions
     {
-        case 565107:
-        case 3485174323:
-        case 2947459201:
-        case 3330387112:
-        case 3465943172:
-        case 2809269541:
-        case 1196254976:
-        case 1117160149:
-        case 2750591888:
-        case 2573301126:
-            return true;
-        default:
-            return false;
-
+    case 565107:
+        if(strcmp("if",input) == 0) return true;
+            break;
+    case 3485174323:
+        if(strcmp("then",input) == 0) return true;
+            break;
+    case 2947459201:
+        if(strcmp("else",input) == 0) return true;
+            break;
+    case 3330387112:
+        if(strcmp("set",input) == 0) return true;
+            break;
+    case 3465943172:
+        if(strcmp("init",input) == 0) return true;
+            break;
+    case 2809269541:
+        if(strcmp("asm",input) == 0) return true;
+            break;
+    case 1196254976:
+        if(strcmp("label",input) == 0) return true;
+            break;
+    case 1117160149:
+        if(strcmp("goto",input) == 0) return true;
+            break;
+    case 2750591888:
+        if(strcmp("gosub",input) == 0) return true;
+            break;
+    case 2573301126:
+        if(strcmp("scope",input) == 0) return true;
+            break;
     }
+    return false;
 }
