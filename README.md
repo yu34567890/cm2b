@@ -30,7 +30,7 @@ x = x + 2;      // assignment
 
 ### Labels
 ```cm2b
-label start
+label start;
 ...
 goto start;     // jump to a label
 ```
@@ -40,7 +40,7 @@ goto start;     // jump to a label
 
 ### Control Flow
 ```cm2b
-if x > 25 then label_true else label_false
+if x > 25 then label_true else label_false;
 ```
 - Jumps to `label_true` if condition is true, otherwise to `label_false`.
 
@@ -48,10 +48,10 @@ if x > 25 then label_true else label_false
 
 ### Scope
 ```cm2b
-scope math
+scope math;
 set pi = 3141;  // becomes math.pi
 
-scope main
+scope main;
 math.pi = 3;     // accesses math.pi instead of main.pi
 ```
 
@@ -77,14 +77,14 @@ z = x > y;   // result 0 (false) or 1 (true)
 
 ### Example Program
 ```cm2b
-scope cpu_test
+scope cpu_test;
 set counter = 0;
 
-label loop_start
+label loop_start;
 counter = counter + 1;
 
-if counter < 100 then loop_start else end_test
+if counter < 100 then loop_start else end_test;
 
-label end_test
+label end_test;
 // Finished counting
 ```
