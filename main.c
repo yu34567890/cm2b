@@ -11,46 +11,9 @@ char* code;
 #include "parser.h"
 
 
-const char* nodetype_to_string(Nodetype type) {
-    switch (type) {
-        case PROGRAM: return "PROGRAM";
-        case BINARY_EXPR: return "BINARY_EXPR";
-        case LITERAL: return "LITERAL";
-        case IDENTIFIER: return "IDENTIFIER";
-        case SCOPE: return "SCOPE";
-        case LABEL: return "LABEL";
-        case ASSIGN: return "ASSIGN";
-        case DECLARE: return "DECLARE";
-        case IF: return "IF";
-        case ELSE: return "ELSE";
-        case SCOPE_ACCES: return "SCOPE_ACCES";
-        default: return "UNKNOWN";
-    }
-}
 
-void print_tree(Node_t* node, int depth) {
-    if (!node) return;
 
-    // Indent based on depth
-    for (int i = 0; i < depth; i++) {
-        printf("  "); // 2 spaces per level
-    }
 
-    // Print node type
-    printf("%s", nodetype_to_string(node->nodetype));
-
-    // Optionally print node data if it's a string
-    if (node->data) {
-        printf(": %s", (char*)node->data); // assuming data is string, adjust as needed
-    }
-
-    printf("\n");
-
-    // Recursively print children
-    for (unsigned int i = 0; i < node->child_count; i++) {
-        print_tree(node->child[i], depth + 1);
-    }
-}
 
 int main(int argc, char **argv)
 {
@@ -92,7 +55,7 @@ int main(int argc, char **argv)
                tokens[index].value);
     }
     Node_t* tree = parse(tokens);
-    print_tree(tree,1);
+    print_tree(tree,2);
     printf("babalar\n");
 
     free(code);  

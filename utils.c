@@ -108,3 +108,38 @@ bool iskeyword(char* input) { // todo optimize it with hash strings
     }
     return false;
 }
+const char* nodetype_to_string(Nodetype type) {
+    switch (type) {
+        case PROGRAM: return "PROGRAM";
+        case BINARY_EXPR: return "BINARY_EXPR";
+        case LITERAL: return "LITERAL";
+        case IDENTIFIER: return "IDENTIFIER";
+        case SCOPE: return "SCOPE";
+        case LABEL: return "LABEL";
+        case ASSIGN: return "ASSIGN";
+        case DECLARE: return "DECLARE";
+        case IF: return "IF";
+        case ELSE: return "ELSE";
+        case SCOPE_ACCES: return "SCOPE_ACCES";
+        default: return "UNKNOWN";
+    }
+}
+void print_tree(Node_t* node, int depth) {
+    if (!node) return;
+
+    for (int i = 0; i < depth; i++) {
+        printf("  ");
+    }
+
+    printf("%s", nodetype_to_string(node->nodetype));
+
+    if (node->data) {
+        printf(": %s", (char*)node->data); 
+    }
+
+    printf("\n");
+
+    for (unsigned int i = 0; i < node->child_count; i++) {
+        print_tree(node->child[i], depth + 1);
+    }
+}
