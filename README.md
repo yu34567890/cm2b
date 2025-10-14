@@ -1,3 +1,5 @@
+
+![Logo](./images/logo.png)
 # cm2b
 
 cm2b is a basic knockoff for CM2 CPUs. It is simple and minimalistic.
