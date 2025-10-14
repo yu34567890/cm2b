@@ -8,7 +8,7 @@ cm2b is a basic knockoff for CM2 CPUs. It is simple and minimalistic.
 
 ## TODO
 - [ ] Finish parser
-- [x] Design an [IR](https://docs.google.com/spreadsheets/d/13bLfUIbausaWUBpG9-wlf7qLv_2vzgzIvoaG8cppK4g)
+- [x] Design an IR
 - [ ] Make IR generation
 - [x] Finish syntax design
 - [ ] Make a primitive scope  
@@ -88,3 +88,5 @@ if counter < 100 then loop_start else end_test;
 label end_test;
 // Finished counting
 ```
+## Intermediate Representation
+- [cm2 universal isa](https://docs.google.com/spreadsheets/d/13bLfUIbausaWUBpG9-wlf7qLv_2vzgzIvoaG8cppK4g)
