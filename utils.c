@@ -40,6 +40,8 @@ char *token_to_string(Token_t token) {
         case TOKEN_LTE: return "LTE";
         case TOKEN_GT: return "GT";
         case TOKEN_GTE: return "GTE";
+        case TOKEN_OPENING_PAREN: return "TOKEN_OPENING_PAREN";
+        case TOKEN_CLOSING_PAREN: return "TOKEN_CLOSING_PAREN";
         default: return "UNKNOWN";
     }
 }
@@ -100,6 +102,9 @@ bool iskeyword(char* input) { // todo optimize it with hash strings
     case 2750591888:
         if(strcmp("gosub",input) == 0) return true;
             break;
+    case 3301431951:
+        if(strcmp("ret",input) == 0) return true;
+            break;
     case 2573301126:
         if(strcmp("scope",input) == 0) return true;
             break;
@@ -118,6 +123,9 @@ const char* nodetype_to_string(Nodetype type) {
         case DECLARE: return "DECLARE";
         case IF: return "IF";
         case ELSE: return "ELSE";
+        case GOTO: return "GOTO";
+        case GOSUB: return "GOSUB";
+        case RET: return "RET";
         case SCOPE_ACCES: return "SCOPE_ACCES";
         case ASM: return "ASM";
         default: return "UNKNOWN";
@@ -141,4 +149,83 @@ void print_tree(Node_t* node, int depth) {
     for (unsigned int i = 0; i < node->child_count; i++) {
         print_tree(node->child[i], depth + 1);
     }
+}
+
+static inline char getprecedence(Token_t c)
+{
+    switch (c.type)
+    {
+        case TOKEN_PLUS:
+        case TOKEN_MINUS:
+        return 1;
+        case TOKEN_STAR:
+        case TOKEN_SLASH:
+        return 2;
+    }
+    return 0;
+}
+
+
+Token_t* topostfix(Token_t* infix)
+{
+    int i=0;
+    int opcodes=0;
+    for(;infix[i].type != TOKEN_EOF;i++)
+    {
+        if(getprecedence(infix[i]))
+        {
+            opcodes++;
+        }
+    }
+    int stack_ptr = 0;
+    int result_ptr = 0;
+    
+    int precedence_boost = 1;
+    
+    Token_t* stack = calloc(opcodes + 1, sizeof(Token_t));
+    char* precedence_stack = calloc(opcodes + 1, sizeof(char));
+    Token_t* result = calloc(i + 1, sizeof(Token_t));
+
+    result[i].type=TOKEN_EOF;
+    result[i].value=strdup("EOF");
+    result[i].index=infix[i-1].index;
+    
+    
+    for(i=0; infix[i].type != TOKEN_EOF; i++)
+    {
+
+        if (infix[i].type == TOKEN_NUMBER)
+        {
+            result[result_ptr++] = infix[i];
+        }
+        else if(getprecedence(infix[i]))
+        {
+            while(stack_ptr&& precedence_stack[stack_ptr] >= getprecedence(infix[i])*precedence_boost)
+            {
+                
+                result[result_ptr++] = stack[stack_ptr--];
+            }
+           
+            stack[++stack_ptr] = infix[i];
+            precedence_stack[stack_ptr] = getprecedence(infix[i])*precedence_boost;
+        }
+        else if(infix[i].type == TOKEN_OPENING_PAREN)
+        {
+            precedence_boost += 10;
+            
+        }
+        else if(infix[i].type == TOKEN_CLOSING_PAREN)
+        {
+            precedence_boost -= 10;
+        }
+    }
+    for(;stack_ptr>=0;)
+    {
+        
+        result[result_ptr++] = stack[stack_ptr--];
+    }
+    free(stack);
+    free(precedence_stack);
+    
+    return result;
 }

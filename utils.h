@@ -21,4 +21,6 @@ bool iskeyword(char* input);
 char *token_to_string(Token_t token);
 const char* nodetype_to_string(Nodetype type);
 void print_tree(Node_t* node, int depth);
+Token_t* topostfix(Token_t* infix);
+
 #endif // UTILS_H

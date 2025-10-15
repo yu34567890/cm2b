@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O2
+CFLAGS = -Wall -Wextra -O2 
 SRCS := $(wildcard *.c)
 OBJS := $(patsubst %.c, build/%.o, $(SRCS))
 TARGET = build/cm2b

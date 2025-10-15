@@ -22,6 +22,9 @@ typedef enum
     DECLARE, // variable declaration eg set a=2;
     IF,
     ELSE,     // if <else statement
+    GOTO,
+    GOSUB,
+    RET,
     SCOPE_ACCES, //scope accesing eg math.varname;
     ASM // asm code eg asm "MOV R1,R2";
 

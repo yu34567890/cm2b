@@ -17,9 +17,11 @@ Token_t* tokenize(char* input) { // todo add comments eg //
             char* matched = malloc(len+1);
             memcpy(matched, input + index, len);
             matched[len] = 0;
+            
             result[token_pos].type = TOKEN_NUMBER;
             result[token_pos].index = index;
             result[token_pos++].value = matched;
+            
             index = index2-1;
             continue;
         }
@@ -170,6 +172,18 @@ Token_t* tokenize(char* input) { // todo add comments eg //
             result[token_pos].index = index;
             result[token_pos++].value = strdup(".");
         }
+        else if(input[index] == '(')
+        {
+            result[token_pos].type = TOKEN_OPENING_PAREN;
+            result[token_pos].index = index;
+            result[token_pos++].value = strdup("(");
+        }
+        else if(input[index] == ')')
+        {
+            result[token_pos].type = TOKEN_CLOSING_PAREN;
+            result[token_pos].index = index;
+            result[token_pos++].value = strdup(")");
+        }
         else 
         {
                
@@ -188,6 +202,7 @@ Token_t* tokenize(char* input) { // todo add comments eg //
     Token_t* tmp = realloc(result,(token_pos+1)*sizeof(struct Token_t));
     if(tmp!=NULL)
     {
+        
         return tmp;
     }
     else

@@ -1,0 +1,5 @@
+label loop;
+
+goto loop;
+gosub loop;
+ret;

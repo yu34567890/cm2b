@@ -22,6 +22,8 @@ typedef enum
     TOKEN_LTE,
     TOKEN_GT,
     TOKEN_GTE,
+    TOKEN_OPENING_PAREN,
+    TOKEN_CLOSING_PAREN,
     TOKEN_UNKNOW
 } Tokentype;
 
