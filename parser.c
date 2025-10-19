@@ -1,8 +1,7 @@
 #include "parser.h"
 #include "utils.h"
 
-char* current_scope;
-bucket_t variables; 
+
 Node_t ROOT_NODE;
 /*
 example usage
@@ -50,8 +49,17 @@ void insert_node(Node_t *target_node,Node_t *node)
     target_node->child[target_node->child_count-1] = node;
 }
 
+Node_t* create_node(Nodetype nodetype, void* data) {
+    Node_t* node = calloc(1, sizeof(Node_t));
+    if (!node) return NULL; // allocation failed
 
+    node->nodetype = nodetype;
+    node->data = data;        // just store pointer (no copy)
+    node->child = NULL;       // no children yet
+    node->child_count = 0;
 
+    return node;
+}
 
 Node_t* parse_line(Token_t* tokens) // todo optimize it with switch and use hash like in utils.c iskeyword func
 {
@@ -172,13 +180,53 @@ Node_t* parse_line(Token_t* tokens) // todo optimize it with switch and use hash
             result->child_count = 0;
             return result;
         }
+        if(strcmp(tokens[0].value,"set") == 0 ) 
+        {
+            if(tokens[2].type != TOKEN_ASSIGN)
+            {
+                print_error("ERROR: expected TOKEN_ASSIGN at row %zu column %zu",get_row(tokens[1].index),get_column(tokens[1].index));
+                exit(1); 
+            }
+
+            if(tokens[1].type != TOKEN_IDENTIFIER)
+            {
+                print_error("ERROR: expected TOKEN_IDENTIFIER at row %zu column %zu",get_row(tokens[1].index),get_column(tokens[1].index));
+                exit(1); 
+            }
+            
+            Token_t* postfix = topostfix(tokens + 3);
+
+            
+            
+            result = calloc(1,sizeof(Node_t));
+            Node_t* current = result;
+            Node_t* result_node;
+            result->nodetype = ASSIGN;
+            result->data =(void*)tokens[1].value;
+            result->child_count = 0;
+
+            for(int i = 0; postfix[i].type;i++)
+            {
+                if(postfix[i].type == TOKEN_NUMBER)
+                {
+                    
+                }
+                else
+                {
+
+                }
+            }
+
+            free(postfix);
+            return result;
+        }
     }
 }
 
 
 Node_t* parse(Token_t* tokens)
 {
-    variables = init_hashmap(2048);
+
     Node_t* ROOT_NODE = malloc(sizeof(Node_t));
     ROOT_NODE->nodetype = PROGRAM;
     ROOT_NODE->child_count = 0;
@@ -206,6 +254,7 @@ Node_t* parse(Token_t* tokens)
                 args[len] = (Token_t){TOKEN_EOF,NULL,0}; 
                 memcpy(args, tokens+i, len*sizeof(struct Token_t));
                 insert_node(ROOT_NODE,parse_line(args));
+                free(args);
                 i=i2;
                 break;
         }

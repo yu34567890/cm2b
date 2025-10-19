@@ -6,7 +6,7 @@ Token_t* tokenize(char* input) { // todo add comments eg //
     Token_t* result = malloc((strlen(input)+1) * sizeof(Token_t)); // number of tokens must be smaller than the ammount of charachters 
     size_t token_pos = 0;
     size_t index = 0;
-    for(; input[index] != 0; index++)
+    for(; input[index]; index++)
     {
         
         if(isdigit((unsigned char)input[index]))
@@ -48,6 +48,7 @@ Token_t* tokenize(char* input) { // todo add comments eg //
             index = index2-1;
             continue;
         }
+
         else if(input[index] == '"') 
         {
             index++;
@@ -140,6 +141,12 @@ Token_t* tokenize(char* input) { // todo add comments eg //
         }
         else if(input[index] == '/')
         {
+            if(input[index+1] == '/')
+            {
+                // comment case
+                for(; input[index] && input[index] != '\n'; index++);
+                continue;
+            }
             result[token_pos].type = TOKEN_SLASH;
             result[token_pos].index = index;
             result[token_pos++].value = strdup("/");
@@ -184,6 +191,7 @@ Token_t* tokenize(char* input) { // todo add comments eg //
             result[token_pos].index = index;
             result[token_pos++].value = strdup(")");
         }
+
         else 
         {
                

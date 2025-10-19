@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "parser.h"
+#include "node.h"
 #include "token.h"
 #include "globals.h"
 #include "hashmap.h" // for hash() function
