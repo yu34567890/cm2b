@@ -28,7 +28,7 @@ Token_t* tokenize(char* input) { // todo add comments eg //
         else if(isalpha((unsigned char)input[index]))
         {
             size_t index2=index;
-            for(; isalnum((unsigned char)input[index2]); index2++);
+            for(; isalnum((unsigned char)input[index2]) || input[index2] == '.'; index2++);
             size_t len = index2 - index;
             char* matched = malloc(len+1);
             memcpy(matched, input + index, len);
@@ -172,12 +172,6 @@ Token_t* tokenize(char* input) { // todo add comments eg //
             result[token_pos].type = TOKEN_COMMA;
             result[token_pos].index = index;
             result[token_pos++].value = strdup(",");
-        }
-        else if(input[index] == '.')
-        {
-            result[token_pos].type = TOKEN_DOT;
-            result[token_pos].index = index;
-            result[token_pos++].value = strdup(".");
         }
         else if(input[index] == '(')
         {

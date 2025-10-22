@@ -117,7 +117,6 @@ const char* nodetype_to_string(Nodetype type) {
         case BINARY_EXPR: return "BINARY_EXPR";
         case LITERAL: return "LITERAL";
         case IDENTIFIER: return "IDENTIFIER";
-        case SCOPE: return "SCOPE";
         case LABEL: return "LABEL";
         case ASSIGN: return "ASSIGN";
         case DECLARE: return "DECLARE";
@@ -126,7 +125,6 @@ const char* nodetype_to_string(Nodetype type) {
         case GOTO: return "GOTO";
         case GOSUB: return "GOSUB";
         case RET: return "RET";
-        case SCOPE_ACCES: return "SCOPE_ACCES";
         case ASM: return "ASM";
         default: return "UNKNOWN";
     }
@@ -176,14 +174,18 @@ Token_t* topostfix(Token_t* infix)
         {
             opcodes++;
         }
+        else if (infix[i].type == TOKEN_OPENING_PAREN || infix[i].type == TOKEN_CLOSING_PAREN)
+        {
+            opcodes++;
+        }
+        
     }
     int stack_ptr = 0;
     int result_ptr = 0;
-    
-    int precedence_boost = 1;
+
     
     Token_t* stack = calloc(opcodes + 1, sizeof(Token_t));
-    char* precedence_stack = calloc(opcodes + 1, sizeof(char));
+    
     Token_t* result = calloc(i + 1, sizeof(Token_t));
 
     result[i].type=TOKEN_EOF;
@@ -200,23 +202,36 @@ Token_t* topostfix(Token_t* infix)
         }
         else if(getprecedence(infix[i]))
         {
-            while(stack_ptr&& precedence_stack[stack_ptr] >= getprecedence(infix[i])*precedence_boost)
+            
+            while(stack_ptr && (getprecedence(stack[stack_ptr]) > getprecedence(infix[i]) && infix[i].type != TOKEN_OPENING_PAREN && infix[i].type != TOKEN_CLOSING_PAREN))
             {
                 
                 result[result_ptr++] = stack[stack_ptr--];
             }
            
             stack[++stack_ptr] = infix[i];
-            precedence_stack[stack_ptr] = getprecedence(infix[i])*precedence_boost;
         }
         else if(infix[i].type == TOKEN_OPENING_PAREN)
         {
-            precedence_boost += 10;
+            stack[++stack_ptr] = infix[i];
             
         }
         else if(infix[i].type == TOKEN_CLOSING_PAREN)
         {
-            precedence_boost -= 10;
+            while(stack_ptr && stack[stack_ptr].type != TOKEN_OPENING_PAREN)
+            {
+                
+                result[result_ptr++] = stack[stack_ptr--];
+            }
+            if(stack_ptr!=0)
+            {
+                stack[stack_ptr--];
+            }
+            else
+            {
+                printf("POSTFIX ERROR: PAREN NOT CLOSED at row %zu column %zu\n",get_row(infix[0].index),get_column(infix[0].index));
+                exit(1);
+            }
         }
     }
     for(;stack_ptr>=0;)
@@ -225,7 +240,59 @@ Token_t* topostfix(Token_t* infix)
         result[result_ptr++] = stack[stack_ptr--];
     }
     free(stack);
-    free(precedence_stack);
+
     
     return result;
+}
+
+
+exptree_t*  to_exptree(Token_t* expression)
+{
+
+    int i = 0;
+    for(i=0; expression[i].type; i++);
+    exptree_t** stack = calloc(i,sizeof(exptree_t*));
+    int stack_ptr = -1;
+
+    for(i=0; expression[i].type; i++)
+    {
+        if(expression[i].type == TOKEN_NUMBER)
+        {
+            exptree_t* p = malloc(sizeof(exptree_t));
+            p->type = LITERAL;
+            p->value = (void *)expression[i].value;
+            p->left = NULL;
+            p->right = NULL;
+            stack[++stack_ptr] = p;
+        }
+        else if(expression[i].type >= TOKEN_PLUS && expression[i].type <= TOKEN_GTE) // optimizasion hack !!!
+        {
+            exptree_t* p = malloc(sizeof(exptree_t));
+            p->type = OP;
+            p->value = (void *)expression[i].value;
+            p->right = stack[stack_ptr--];
+            p->left = stack[stack_ptr--];
+            stack[++stack_ptr] = p;
+        }
+    }
+    exptree_t* result = stack[0];
+    free(stack);
+    return result; // should be finish
+}
+
+
+void print_exptree(exptree_t* node) 
+{
+
+    if (!node) return;
+
+    if (node->type == LITERAL) {
+        printf("%s", (char*)node->value);
+    } else if (node->type == OP) {
+        printf("(");
+        print_exptree(node->left);  
+        printf(" %s ", (char*)node->value);
+        print_exptree(node->right);  
+        printf(")");
+    }
 }

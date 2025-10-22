@@ -17,6 +17,7 @@ char* code;
 
 int main(int argc, char **argv)
 {
+    /* // uncomment on production please
     if(argc != 2)
     {
         printf("ERROR wrong number of arguments. Usage: %s FILE\n", argv[0]);
@@ -43,9 +44,15 @@ int main(int argc, char **argv)
     fread(code, 1, size, fptr);
     code[size] = '\0';
     fclose(fptr);
+    */
+    code = strdup("1 + 2 * 3");
 
     Token_t* tokens = tokenize(code);
-    /*
+
+
+    //Node_t* tree = parse(tokens);
+    tokens = topostfix(tokens);
+
     for (size_t index = 0; tokens[index].type; index++)
     {
         printf("row %zu column %zu token %s value %s\n",
@@ -54,10 +61,9 @@ int main(int argc, char **argv)
                token_to_string(tokens[index]),
                tokens[index].value);
     }
-    */
-    Node_t* tree = parse(tokens);
-    
-    print_tree(tree,2);
+    exptree_t* tree = to_exptree(tokens);
+    print_exptree(tree);
+   
 
 
 

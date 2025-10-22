@@ -87,25 +87,6 @@ Node_t* parse_line(Token_t* tokens) // todo optimize it with switch and use hash
 
             return result;
         }
-        else if(strcmp(tokens[0].value,"scope") == 0)
-        {
-            if(tokens[1].type == TOKEN_EOF)
-            {
-                print_error("ERROR: unexpected eof at row %zu column %zu did you forget semicollon ?",get_row(tokens[1].index),get_column(tokens[1].index));
-                exit(1); 
-            }
-            if(tokens[1].type != TOKEN_IDENTIFIER)
-            {
-                print_error("ERROR: scope expected identifier at row %zu column %zu got %s instead ?",get_row(tokens[1].index),get_column(tokens[1].index),tokens[1].type);
-                exit(1); 
-            }
-            result = malloc(sizeof(Node_t));
-            result->nodetype = SCOPE;
-            result->data = strdup(tokens[1].value);
-            result->child = NULL;
-            result->child_count = 0;
-            return result;
-        }
         else if(strcmp(tokens[0].value,"asm") == 0 ) 
         {
             
