@@ -182,12 +182,33 @@ Node_t* parse_line(Token_t* tokens) // todo optimize it with switch and use hash
             id->nodetype=IDENTIFIER;
             id->data = (void *)tokens[1].value;
             result->data = (void*)exptree;
-            result->nodetype = ASSIGN;
+            result->nodetype = DECLARE;
             result->child = malloc(sizeof(Node_t*));
             result->child[0] = id;
             result->child_count = 1;
             return result;
         }
+    }
+    else if(tokens[0].type == TOKEN_IDENTIFIER)
+    {
+        
+        if(tokens[1].type != TOKEN_ASSIGN)
+        {
+            print_error("ERROR: expected TOKEN_ASSIGN at row %zu column %zu",get_row(tokens[1].index),get_column(tokens[1].index));
+            exit(1); 
+        }
+        Node_t* result = calloc(1,sizeof(Node_t));
+        Token_t* postfix = topostfix(tokens + 2);
+        exptree_t* exptree = to_exptree(postfix);
+        free(postfix);
+        Node_t* id = calloc(1,sizeof(Node_t));
+        id->nodetype=IDENTIFIER;
+        id->data = (void *)tokens[0].value;
+        result->data = (void*)exptree;
+        result->nodetype = ASSIGN;
+        result->child = malloc(sizeof(Node_t*));
+        result->child[0] = id;
+        result->child_count = 1;
     }
 }
 
@@ -208,7 +229,9 @@ Node_t* parse(Token_t* tokens)
         Token_t current = tokens[i];
         switch(current.type)
         {
-            case TOKEN_KEYWORD: 
+            case TOKEN_KEYWORD:
+            case TOKEN_IDENTIFIER: 
+                
                 for(i2=i;tokens[i2].type != TOKEN_SEMICOLON; i2++)
                 {
                      if(tokens[i2].type == TOKEN_EOF)

@@ -136,10 +136,19 @@ static inline char getprecedence(Token_t c)
     {
         case TOKEN_PLUS:
         case TOKEN_MINUS:
-        return 1;
+        return 2;
         case TOKEN_STAR:
         case TOKEN_SLASH:
-        return 2;
+        return 3;
+        case TOKEN_LTE:
+        case TOKEN_LT:
+        case TOKEN_GTE:
+        case TOKEN_GT:
+        case TOKEN_EQ:
+        case TOKEN_NEQ:
+        return 1;
+        
+        
     }
     return 0;
 }
@@ -287,7 +296,7 @@ void print_tree(Node_t* node, int depth) {
     }
 
     printf("%s", nodetype_to_string(node->nodetype));
-    if (node->nodetype == ASSIGN)
+    if (node->nodetype == ASSIGN || node->nodetype == DECLARE)
     {
         printf("\n");
         for (int i = 0; i < depth+1; i++) 

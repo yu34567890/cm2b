@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     code[size] = '\0';
     fclose(fptr);
     */
-    code = strdup("set a = 25;");
+    code = strdup("a = 25>25;");
 
     Token_t* tokens = tokenize(code);
 
