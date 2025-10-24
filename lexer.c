@@ -90,7 +90,6 @@ Token_t* tokenize(char* input) { // todo add comments eg //
         }
         else if(input[index] == '<')
         {
-        {
             if(input[index+1] == '=')
             {
                 result[token_pos].type = TOKEN_LTE;
@@ -107,7 +106,6 @@ Token_t* tokenize(char* input) { // todo add comments eg //
         }
 
         else if(input[index] == '>')
-        {
         {
             if(input[index+1] == '=')
             {

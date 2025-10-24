@@ -129,25 +129,6 @@ const char* nodetype_to_string(Nodetype type) {
         default: return "UNKNOWN";
     }
 }
-void print_tree(Node_t* node, int depth) {
-    if (!node) return;
-
-    for (int i = 0; i < depth; i++) {
-        printf("  ");
-    }
-
-    printf("%s", nodetype_to_string(node->nodetype));
-
-    if (node->data) {
-        printf(": %s", (char*)node->data); 
-    }
-
-    printf("\n");
-
-    for (unsigned int i = 0; i < node->child_count; i++) {
-        print_tree(node->child[i], depth + 1);
-    }
-}
 
 static inline char getprecedence(Token_t c)
 {
@@ -294,5 +275,38 @@ void print_exptree(exptree_t* node)
         printf(" %s ", (char*)node->value);
         print_exptree(node->right);  
         printf(")");
+    }
+}
+
+void print_tree(Node_t* node, int depth) {
+    if (!node) return;
+
+    for (int i = 0; i < depth; i++) 
+    {
+        printf("  ");
+    }
+
+    printf("%s", nodetype_to_string(node->nodetype));
+    if (node->nodetype == ASSIGN)
+    {
+        printf("\n");
+        for (int i = 0; i < depth+1; i++) 
+        {
+            printf("  ");
+        }
+        printf("EXPRESSION:");
+        print_exptree((exptree_t*)node->data);
+
+    }
+    else if (node->data) 
+    {
+        printf(": %s", (char*)node->data); 
+    }
+
+    printf("\n");
+
+    for (unsigned int i = 0; i < node->child_count; i++) 
+    {
+        print_tree(node->child[i], depth + 1);
     }
 }

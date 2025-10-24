@@ -174,31 +174,18 @@ Node_t* parse_line(Token_t* tokens) // todo optimize it with switch and use hash
                 print_error("ERROR: expected TOKEN_IDENTIFIER at row %zu column %zu",get_row(tokens[1].index),get_column(tokens[1].index));
                 exit(1); 
             }
-            
+            Node_t* result = calloc(1,sizeof(Node_t));
             Token_t* postfix = topostfix(tokens + 3);
-
-            
-            
-            result = calloc(1,sizeof(Node_t));
-            Node_t* current = result;
-            Node_t* result_node;
-            result->nodetype = ASSIGN;
-            result->data =(void*)tokens[1].value;
-            result->child_count = 0;
-
-            for(int i = 0; postfix[i].type;i++)
-            {
-                if(postfix[i].type == TOKEN_NUMBER)
-                {
-                    
-                }
-                else
-                {
-
-                }
-            }
-
+            exptree_t* exptree = to_exptree(postfix);
             free(postfix);
+            Node_t* id = calloc(1,sizeof(Node_t));
+            id->nodetype=IDENTIFIER;
+            id->data = (void *)tokens[1].value;
+            result->data = (void*)exptree;
+            result->nodetype = ASSIGN;
+            result->child = malloc(sizeof(Node_t*));
+            result->child[0] = id;
+            result->child_count = 1;
             return result;
         }
     }

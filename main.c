@@ -45,24 +45,24 @@ int main(int argc, char **argv)
     code[size] = '\0';
     fclose(fptr);
     */
-    code = strdup("(1 + 2) * 3");
+    code = strdup("set a = 25;");
 
     Token_t* tokens = tokenize(code);
 
 
     //Node_t* tree = parse(tokens);
-    tokens = topostfix(tokens);
+    
 
-    for (size_t index = 0; tokens[index].type; index++)
+
+    /*for (size_t index = 0; tokens[index].type; index++)
     {
         printf("row %zu column %zu token %s value %s\n",
                get_row(tokens[index].index),
                get_column(tokens[index].index),
                token_to_string(tokens[index]),
                tokens[index].value);
-    }
-    exptree_t* tree = to_exptree(tokens);
-    print_exptree(tree);
+    }*/
+    print_tree(parse(tokens),0);
    
 
 

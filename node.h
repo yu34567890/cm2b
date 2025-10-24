@@ -16,8 +16,10 @@ typedef enum
     GOTO,
     GOSUB,
     RET,
-    ASM // asm code eg asm "MOV R1,R2";
+    ASM, // asm code eg asm "MOV R1,R2";
 
+
+    
 } Nodetype;
 
 typedef struct Node_t 
