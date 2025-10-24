@@ -17,7 +17,7 @@ char* code;
 
 int main(int argc, char **argv)
 {
-    /* // uncomment on production please
+    /* // uncomment on release please
     if(argc != 2)
     {
         printf("ERROR wrong number of arguments. Usage: %s FILE\n", argv[0]);
@@ -45,7 +45,7 @@ int main(int argc, char **argv)
     code[size] = '\0';
     fclose(fptr);
     */
-    code = strdup("1 + 2 * 3");
+    code = strdup("(1 + 2) * 3");
 
     Token_t* tokens = tokenize(code);
 

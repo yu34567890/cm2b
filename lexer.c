@@ -81,20 +81,6 @@ Token_t* tokenize(char* input) { // todo add comments eg //
                 result[token_pos++].value = strdup("==");
                 index+=1;
             }
-            else if(input[index+1] == '>')
-            {
-                result[token_pos].type = TOKEN_GTE;
-                result[token_pos].index = index;
-                result[token_pos++].value = strdup("=>");
-                index+=1;
-            }
-            else if(input[index+1] == '<')
-            {
-                result[token_pos].type = TOKEN_LTE;
-                result[token_pos].index = index;
-                result[token_pos++].value = strdup("=<");
-                index+=1;
-            }
             else
             {
                 result[token_pos].type = TOKEN_ASSIGN;
@@ -104,15 +90,38 @@ Token_t* tokenize(char* input) { // todo add comments eg //
         }
         else if(input[index] == '<')
         {
+        {
+            if(input[index+1] == '=')
+            {
+                result[token_pos].type = TOKEN_LTE;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup("<=");
+                index+=1;
+            }
+            else
+            {
                 result[token_pos].type = TOKEN_LT;
                 result[token_pos].index = index;
                 result[token_pos++].value = strdup("<");
+            }
         }
+
         else if(input[index] == '>')
         {
+        {
+            if(input[index+1] == '=')
+            {
+                result[token_pos].type = TOKEN_GTE;
+                result[token_pos].index = index;
+                result[token_pos++].value = strdup(">=");
+                index+=1;
+            }
+            else
+            {
                 result[token_pos].type = TOKEN_GT;
                 result[token_pos].index = index;
                 result[token_pos++].value = strdup(">");
+            }
         }
         else if(input[index] == ';')
         {
